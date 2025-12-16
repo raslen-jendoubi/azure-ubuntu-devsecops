@@ -34,6 +34,7 @@ graph TD
     H -->|Pull 'latest' Image| I[Live Production Site]
     style E fill:#f9f,stroke:#333,stroke-width:4px
     style F fill:#ff0000,stroke:#333,color:white
+```
 ## 🔐 DevSecOps in Action (Vulnerability Management)
 This project is not just theoretical. During development, I successfully identified and patched a real-world vulnerability to prove the pipeline's security gate works.
 
