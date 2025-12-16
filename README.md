@@ -24,8 +24,9 @@ The project was built and tested on the following environment:
 * **Docker:** Version 28.0.0
 * **Azure CLI:** Version 2.61.0
 * **Python:** Version 3.12.3
+
 ## 📂 Project Structure
-text
+---text
 .
 ├── app
 │   ├── app.py
@@ -67,6 +68,49 @@ EXPOSE 5000
 CMD ["python", "app.py"]
 
 ```
+### 2. The CI/CD Pipeline (GitHub Actions)
+This YAML configuration defines the automation logic, including the critical **Trivy Security Scan** step.
+
+```yaml
+name: Ubuntu DevSecOps Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  IMAGE_NAME: flask-app
+  ACR_NAME: ubuntuacrraslen 
+
+jobs:
+  build-secure-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Login to Azure ACR
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build Docker Image
+        run: docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest ./app
+
+      - name: 🛡️ Trivy Security Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}'
+          format: 'table'
+          exit-code: '1' # Fails if critical bugs found
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+      - name: Push to ACR
+        run: docker push --all-tags ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}
+```
 ## 🔐 DevSecOps in Action (Vulnerability Management)
 This project is not just theoretical. During development, I successfully identified and patched a real-world vulnerability to prove the pipeline's security gate works.
 
@@ -89,3 +133,8 @@ With the security gate passed, the application was deployed to Azure Web App for
 
 **Live Site:**
 ![Live Site](docs/images/live-app.png)
+```markdown
+---
+<h3 align="center">
+    Created by <a href="[https://www.linkedin.com/in/YOUR-LINKEDIN-HANDLE/](https://www.linkedin.com/in/raslenjendoubi/)">Raslen Jendoubi</a>
+</h3>
