@@ -23,7 +23,7 @@ jobs:
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build Docker Image
-        run: docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ./app
+        run: docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }} -t ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:latest ./app
 
       - name: 🛡️ Trivy Security Scan
         uses: aquasecurity/trivy-action@master
@@ -35,12 +35,4 @@ jobs:
           severity: 'CRITICAL,HIGH'
 
       - name: Push to ACR
-        run: docker push ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          # ⚠️ UPDATE THIS to your Web App name from Phase 3
-          app-name: 'ubuntu-webapp-raslen'
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          images: '${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ github.sha }}'
+        run: docker push --all-tags ${{ secrets.ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}
