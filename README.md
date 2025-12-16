@@ -34,3 +34,27 @@ graph TD
     H -->|Pull 'latest' Image| I[Live Production Site]
     style E fill:#f9f,stroke:#333,stroke-width:4px
     style F fill:#ff0000,stroke:#333,color:white
+---
+
+## 🔐 DevSecOps in Action (Vulnerability Management)
+This project is not just theoretical. During development, I successfully identified and patched a real-world vulnerability to prove the pipeline's security gate works.
+
+### 1. The Incident (Blocking the Build)
+* **Detection:** The automated Trivy scan flagged `Werkzeug 3.0.1` as having a **HIGH** severity vulnerability (`CVE-2024-34069`).
+* **Action:** The pipeline correctly **failed** the build, preventing the insecure code from reaching production.
+
+**Evidence of blocked build:**
+![Trivy Blocked Build](docs/images/trivy-failed.png)
+
+### 2. The Remediation (Patching the Code)
+* **Fix:** I analyzed the report, upgraded the dependency to `Werkzeug 3.0.3` in `requirements.txt`, and re-pushed.
+* **Result:** The scan passed, and the pipeline automatically resumed deployment.
+
+**Evidence of Clean Scan:**
+![Clean Scan](docs/images/trivy-success.png)
+
+### 3. The Result (Live Deployment)
+With the security gate passed, the application was deployed to Azure Web App for Containers.
+
+**Live Site:**
+![Live Site](docs/images/live-app.png)
