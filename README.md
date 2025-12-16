@@ -136,5 +136,5 @@ With the security gate passed, the application was deployed to Azure Web App for
 ```markdown
 ---
 <h3 align="center">
-    Created by <a href="[https://www.linkedin.com/in/YOUR-LINKEDIN-HANDLE/](https://www.linkedin.com/in/raslenjendoubi/)">Raslen Jendoubi</a>
+    Created by <a href="https://www.linkedin.com/in/raslenjendoubi/">Raslen Jendoubi</a>
 </h3>
