@@ -24,12 +24,12 @@ The pipeline follows a "Secure Supply Chain" model:
 
 ```mermaid
 graph TD
-    A[Developer (Ubuntu VM)] -->|Push Code| B(GitHub Repository)
-    B -->|Trigger| C{GitHub Actions}
+    A["Developer (Ubuntu VM)"] -->|Push Code| B("GitHub Repository")
+    B -->|Trigger| C{"GitHub Actions"}
     C -->|1. Build| D[Docker Image]
     D -->|2. Scan| E[Trivy Security Scanner]
     E -- Critical CVE Found --> F[❌ BLOCK Pipeline]
-    E -- Safe --> G[Push to Azure Registry (ACR)]
+    E -- Safe --> G["Push to Azure Registry (ACR)"]
     G -->|Webhook Trigger| H[Azure Web App]
     H -->|Pull 'latest' Image| I[Live Production Site]
     style E fill:#f9f,stroke:#333,stroke-width:4px
