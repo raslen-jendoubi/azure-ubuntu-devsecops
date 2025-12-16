@@ -18,7 +18,22 @@ Unlike traditional pipelines that deploy blindly, this workflow uses **Trivy** t
 * **Container:** Docker (Multi-stage build).
 
 ---
-
+### Prerequisites
+The project was built and tested on the following environment:
+* **OS:** Ubuntu 24.04.3 LTS
+* **Docker:** Version 28.0.0
+* **Azure CLI:** Version 2.61.0
+* **Python:** Version 3.12.3
+## 📂 Project Structure
+text
+.
+├── app
+│   ├── app.py
+│   ├── Dockerfile
+│   └── requirements.txt
+└── docs
+    └── images
+---
 ## 🏗️ Architecture
 The pipeline follows a "Secure Supply Chain" model:
 
@@ -35,6 +50,23 @@ graph TD
     style E fill:#f9f,stroke:#333,stroke-width:4px
     style F fill:#ff0000,stroke:#333,color:white
 ```
+## ⚙️ Configuration Snippets
+
+### 1. The Secure Dockerfile
+Notice how we run the application as a non-root user (`appuser`) to prevent security breaches.
+
+```dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY . .
+RUN useradd -m appuser
+USER appuser
+EXPOSE 5000
+CMD ["python", "app.py"]
+
+```
 ## 🔐 DevSecOps in Action (Vulnerability Management)
 This project is not just theoretical. During development, I successfully identified and patched a real-world vulnerability to prove the pipeline's security gate works.
 
@@ -46,7 +78,7 @@ This project is not just theoretical. During development, I successfully identif
 ![Trivy Blocked Build](docs/images/trivy-failed.png)
 
 ### 2. The Remediation (Patching the Code)
-* **Fix:** I analyzed the report, upgraded the dependency to `Werkzeug 3.0.3` in `requirements.txt`, and re-pushed.
+* **Fix:** I analysed the report, upgraded the dependency to `Werkzeug 3.0.3` in `requirements.txt`, and re-pushed.
 * **Result:** The scan passed, and the pipeline automatically resumed deployment.
 
 **Evidence of Clean Scan:**
