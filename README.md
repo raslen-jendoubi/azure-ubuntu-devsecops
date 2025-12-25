@@ -46,7 +46,7 @@ Every code push triggers a fully automated and secure workflow.
 ```text
 OS: Ubuntu 24.04 LTS
 Terraform: v1.9.0+
-Docker: 28.0.0
+Docker: 27.3.1
 Azure CLI: 2.61.0
 ```
 
